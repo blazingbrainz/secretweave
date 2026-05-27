@@ -1,0 +1,57 @@
+replicaCount: 1
+
+image:
+  repository: ghcr.io/blazingbrainz/secretweave
+  pullPolicy: IfNotPresent
+  # Overrides the image tag; defaults to Chart.appVersion when empty.
+  tag: ""
+
+# Namespace where annotated source Secrets live.
+parentNamespace: default
+
+# Annotation that marks a Secret for syncing.
+annotationKey: "secretweave.io/sync"
+annotationValue: "true"
+
+# How often to check for new annotated Secrets.
+syncInterval: "30s"
+
+# How often to do a full drift-correction sync across all targets.
+fullSyncInterval: "5m"
+
+# Explicit allowlist of namespace names to sync to.
+# When non-empty, only these namespaces receive secrets. Empty = all namespaces.
+includeNamespaces: []
+
+# Explicit denylist of namespace names to never sync to.
+# Applied after includeNamespaces. Empty = nothing blocked.
+excludeNamespaces: []
+
+# Number of parallel sync workers (tune upward for thousands of namespaces).
+workerCount: 20
+
+# When true, deleting the source Secret also deletes it from all targets.
+deleteOnRemove: true
+
+log:
+  dir: /var/log/secretweave
+  # Number of days to retain log files. Set to 0 to disable automatic deletion.
+  retentionDays: 30
+
+persistence:
+  enabled: true
+  storageClass: ""
+  accessMode: ReadWriteOnce
+  size: 1Gi
+
+serviceAccount:
+  create: true
+  name: ""
+
+resources: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

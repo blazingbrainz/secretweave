@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "secretweave.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "secretweave.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "secretweave.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "secretweave.selectorLabels" . | nindent 8 }}
+    spec:
+      serviceAccountName: {{ include "secretweave.serviceAccountName" . }}
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+      containers:
+        - name: secretweave
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: PARENT_NAMESPACE
+              value: {{ .Values.parentNamespace | quote }}
+            - name: ANNOTATION_KEY
+              value: {{ .Values.annotationKey | quote }}
+            - name: ANNOTATION_VALUE
+              value: {{ .Values.annotationValue | quote }}
+            - name: SYNC_INTERVAL
+              value: {{ .Values.syncInterval | quote }}
+            - name: FULL_SYNC_INTERVAL
+              value: {{ .Values.fullSyncInterval | quote }}
+            - name: INCLUDE_NAMESPACES
+              value: {{ join "," .Values.includeNamespaces | quote }}
+            - name: EXCLUDE_NAMESPACES
+              value: {{ join "," .Values.excludeNamespaces | quote }}
+            - name: WORKER_COUNT
+              value: {{ .Values.workerCount | quote }}
+            - name: DELETE_ON_REMOVE
+              value: {{ .Values.deleteOnRemove | quote }}
+            - name: LOG_DIR
+              value: {{ .Values.log.dir | quote }}
+            - name: LOG_RETENTION_DAYS
+              value: {{ .Values.log.retentionDays | quote }}
+          {{- if .Values.persistence.enabled }}
+          volumeMounts:
+            - name: logs
+              mountPath: {{ .Values.log.dir }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- if .Values.persistence.enabled }}
+      volumes:
+        - name: logs
+          persistentVolumeClaim:
+            claimName: {{ include "secretweave.fullname" . }}-logs
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

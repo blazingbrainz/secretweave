@@ -1,0 +1,33 @@
+# Credentials
+.env
+.env.*
+
+# Go build output
+bin/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Go test & coverage
+*.test
+*.out
+coverage.html
+
+# Go module cache
+vendor/
+
+# Helm packaged charts
+helm/*.tgz
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
