@@ -153,7 +153,7 @@ helm-publish: helm-package
 	cd helm && $(ORAS) push $(OCI_ARTIFACT) \
 		--annotation "org.opencontainers.image.source=https://github.com/blazingbrainz/secretweave" \
 		--annotation "org.opencontainers.image.description=SecretWeave: Kubernetes operator that syncs annotated Secrets across namespaces" \
-		--annotation "org.opencontainers.image.licenses=MIT" \
+		--annotation "org.opencontainers.image.licenses=Apache-2.0" \
 		$(HELM_CHART):application/vnd.cncf.helm.chart.v1.tar+gzip
 	@echo "$(GREEN)✓ Helm chart published: $(OCI_ARTIFACT)$(NC)"
 

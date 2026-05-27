@@ -2,7 +2,7 @@ FROM golang:1.22-alpine AS builder
 
 LABEL org.opencontainers.image.source=https://github.com/blazingbrainz/secretweave
 LABEL org.opencontainers.image.description="SecretWeave: Kubernetes operator that syncs annotated Secrets across namespaces and reacts immediately to new namespace creation"
-LABEL org.opencontainers.image.licenses="MIT"
+LABEL org.opencontainers.image.licenses="Apache-2.0"
 
 WORKDIR /app
 COPY go.mod go.sum ./
