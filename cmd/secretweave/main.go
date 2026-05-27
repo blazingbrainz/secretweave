@@ -22,7 +22,8 @@ func main() {
 		"annotation_key", cfg.AnnotationKey,
 		"sync_interval", cfg.SyncInterval,
 		"full_sync_interval", cfg.FullSyncInterval,
-		"namespace_filter", cfg.NamespaceFilter,
+		"include_namespaces", cfg.IncludeNamespaces,
+		"exclude_namespaces", cfg.ExcludeNamespaces,
 		"workers", cfg.WorkerCount,
 	)
 
